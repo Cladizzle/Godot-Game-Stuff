@@ -3,12 +3,16 @@ extends CharacterBody2D
 
 const SPEED = 130.0
 const JUMP_VELOCITY = -300.0
+const COYOTE_TIME = 0.15 # 150 Millisekunden Coyote Time
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ground_ray: RayCast2D = $RayCast2D
+
 var is_dying = false
 var target = 0.0
 var deathspeed = 1
 var fallback_y_position = 300 # length character can fall until they die
+var coyote_timer = 0.0
 
 func die() -> void:
 	# Check if Player Character is on floor
@@ -35,16 +39,21 @@ func _process(_delta):
 
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
+	# Add Gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta * deathspeed
+		# Reduziere den Coyote Timer, wenn der Spieler in der Luft ist
+		coyote_timer -= delta
+	else:
+		# Spieler hat den Boden berührt, setze Coyote Timer zurück
+		coyote_timer = COYOTE_TIME
 
-	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	# Handle Jump (inkl. Coyote Time)
+	if Input.is_action_just_pressed("jump") and (is_on_floor() or coyote_timer > 0):
 		velocity.y = JUMP_VELOCITY
+		coyote_timer = 0  # Nach einem Sprung deaktivieren
 
 	# Get the input direction and handle the movement/deceleration.
-	# This gets the key input: -1, 0, 1
 	var direction := Input.get_axis("move_left", "move_right")
 	
 	# Flip the Sprite
@@ -60,7 +69,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			animated_sprite.play("run")
 	else:
-			animated_sprite.play("jump")
+		animated_sprite.play("jump")
 	
 	if direction:
 		velocity.x = direction * SPEED
