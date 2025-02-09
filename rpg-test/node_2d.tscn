@@ -347,9 +347,6 @@ position = Vector2(404, -7)
 
 [node name="Platofrm" type="Node" parent="."]
 
-[node name="Platform" parent="Platofrm" instance=ExtResource("2_5l53v")]
-position = Vector2(34, -42)
-
 [node name="Platform2" parent="Platofrm" instance=ExtResource("2_5l53v")]
 position = Vector2(432, 5)
 
@@ -380,3 +377,6 @@ position = Vector2(151, -14)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Deathfall/CreatureKillZone"]
 shape = SubResource("WorldBoundaryShape2D_bs0cp")
+
+[node name="Slime3" parent="." instance=ExtResource("7_ty12c")]
+position = Vector2(105, 32)
