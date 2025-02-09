@@ -5,8 +5,8 @@ const JUMP_VELOCITY = -300.0
 const COYOTE_TIME = 0.15
 const DODGE_SPEED = 300.0
 const DODGE_DURATION = 0.3
-const DODGE_COOLDOWN = 1.0
-const DOUBLE_TAP_TIME = 0.3  # Max time between taps
+const DODGE_COOLDOWN = 0
+const DOUBLE_TAP_TIME = 0.3  
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ground_ray: RayCast2D = $RayCast2D
