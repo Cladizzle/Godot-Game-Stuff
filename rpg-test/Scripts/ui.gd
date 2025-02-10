@@ -9,9 +9,3 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-
-@onready var heart_ui: HBoxContainer = $heart_u  # Adjust path as needed
-
-func update_health_ui():
-	for i in range(max_health):
-		heart_ui[i].visible = i < current_health  # Show or hide hearts based on health

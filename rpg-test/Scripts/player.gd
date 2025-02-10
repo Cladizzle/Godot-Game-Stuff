@@ -5,8 +5,7 @@ const JUMP_VELOCITY = -300.0
 const COYOTE_TIME = 0.15
 const DODGE_SPEED = 300.0
 const DODGE_DURATION = 0.3
-const DODGE_COOLDOWN = 0
-const DOUBLE_TAP_TIME = 0.3  
+const DODGE_COOLDOWN = 0  
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ground_ray: RayCast2D = $RayCast2D
@@ -16,9 +15,6 @@ var is_invincible = false
 var can_dodge = true
 var is_dodging = false
 var dodge_direction = 0
-
-var last_tap_time = {}  # Tracks last press time
-var released_since_last_tap = {}  # Tracks if the key was released
 
 var target = 0.0
 var deathspeed = 1
@@ -81,24 +77,6 @@ func _physics_process(delta: float) -> void:
 	# Handle Movement
 	var direction := Input.get_axis("move_left", "move_right")
 
-	# Debugging - Track inputs
-	if Input.is_action_just_pressed("move_left"):
-		print("Left pressed")
-		handle_double_tap(-1)
-
-	if Input.is_action_just_pressed("move_right"):
-		print("Right pressed")
-		handle_double_tap(1)
-
-	# Track key releases properly
-	if Input.is_action_just_released("move_left"):
-		released_since_last_tap[-1] = true
-		print("Left released")
-
-	if Input.is_action_just_released("move_right"):
-		released_since_last_tap[1] = true
-		print("Right released")
-
 	# Dodge Movement
 	if is_dodging:
 		velocity.x = dodge_direction * DODGE_SPEED
@@ -126,30 +104,23 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-func handle_double_tap(direction: int) -> void:
-	var current_time = Time.get_ticks_msec()
+# Dodge with 'v' instead of double tap
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("dodge"):
+		start_dodge()
 
-	# Check for a valid double tap
-	if direction in last_tap_time and released_since_last_tap.get(direction, false):
-		var time_since_last_tap = current_time - last_tap_time[direction]
-		print("Time since last tap:", time_since_last_tap)
-
-		if time_since_last_tap < DOUBLE_TAP_TIME * 1000:
-			print("Double tap detected! Dodging...")
-			start_dodge(direction)
-
-	# Update tracking variables
-	last_tap_time[direction] = current_time
-	released_since_last_tap[direction] = false  # Reset release tracking
-
-func start_dodge(direction: int) -> void:
-	if not can_dodge or is_dodging:
-		return  
+func start_dodge() -> void:
+	if not can_dodge or is_dodging or is_dying:
+		return  # Prevent dodging while dying
 
 	is_dodging = true
 	is_invincible = true
+
+	# Determine dodge direction based on movement input
+	var direction := Input.get_axis("move_left", "move_right")
+	if direction == 0:
+		direction = 1 if not animated_sprite.flip_h else -1  # Default to facing direction
 	dodge_direction = direction
-	can_dodge = false  
 
 	animated_sprite.play("dodge")
 
