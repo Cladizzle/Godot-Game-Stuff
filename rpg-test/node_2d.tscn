@@ -1,10 +1,11 @@
-[gd_scene load_steps=20 format=4 uid="uid://soyetc42wiq7"]
+[gd_scene load_steps=21 format=4 uid="uid://soyetc42wiq7"]
 
 [ext_resource type="Script" path="res://Scripts/game_manager.gd" id="1_4atgm"]
 [ext_resource type="PackedScene" uid="uid://dc7ijjr45sfj1" path="res://Scenes/player.tscn" id="1_04yw1"]
 [ext_resource type="PackedScene" uid="uid://cy5mwu6e86twe" path="res://Scenes/platform.tscn" id="2_5l53v"]
 [ext_resource type="Texture2D" uid="uid://dksuac5qaxtgu" path="res://Assets/sprites/world_tileset.png" id="2_tpj01"]
 [ext_resource type="Script" path="res://Scripts/ui.gd" id="3_ech5q"]
+[ext_resource type="Texture2D" uid="uid://34ljqj02668o" path="res://Assets/sprites/RedDot.png" id="4_3bl6f"]
 [ext_resource type="PackedScene" uid="uid://d3gkuwmccrjto" path="res://Scenes/coin.tscn" id="4_we25k"]
 [ext_resource type="PackedScene" uid="uid://dsu5fwax0mna" path="res://Scenes/platform_desert.tscn" id="6_e0kag"]
 [ext_resource type="PackedScene" uid="uid://dftjdd3uvs0l3" path="res://Scenes/slime.tscn" id="7_ty12c"]
@@ -293,6 +294,30 @@ theme_override_fonts/font = ExtResource("8_xq6w4")
 theme_override_font_sizes/font_size = 24
 text = "Coins: 0"
 horizontal_alignment = 1
+
+[node name="heart_ui" type="HBoxContainer" parent="Game Manager/UI"]
+anchors_preset = -1
+anchor_left = 0.015
+anchor_top = 0.015
+anchor_right = 1.0
+anchor_bottom = 0.015
+offset_right = 144.0
+offset_bottom = 32.0
+
+[node name="TextureRect" type="TextureRect" parent="Game Manager/UI/heart_ui"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+texture = ExtResource("4_3bl6f")
+
+[node name="TextureRect2" type="TextureRect" parent="Game Manager/UI/heart_ui"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+texture = ExtResource("4_3bl6f")
+
+[node name="TextureRect3" type="TextureRect" parent="Game Manager/UI/heart_ui"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+texture = ExtResource("4_3bl6f")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_i6v6l")

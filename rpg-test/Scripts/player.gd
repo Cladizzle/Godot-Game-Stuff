@@ -24,6 +24,7 @@ var target = 0.0
 var deathspeed = 1
 var fallback_y_position = 300
 var coyote_timer = 0.0
+var can_double_jump = true  # Allows a second jump in mid-air
 
 func die() -> void:
 	if is_invincible:
@@ -44,7 +45,10 @@ func die() -> void:
 
 	# Play death animation after landing
 	animated_sprite.play("death")
-	get_node("CollisionShape2D").queue_free()
+	
+	var collision_shape = get_node_or_null("CollisionShape2D")
+	if collision_shape:
+		collision_shape.queue_free()
 
 	await animated_sprite.animation_finished  # Wait until animation ends
 	get_tree().reload_current_scene()  # Reload level
@@ -63,11 +67,16 @@ func _physics_process(delta: float) -> void:
 		coyote_timer -= delta
 	else:
 		coyote_timer = COYOTE_TIME
+		can_double_jump = true  # Reset double jump when landing
 
-	# Handle Jump (Coyote Time)
-	if Input.is_action_just_pressed("jump") and (is_on_floor() or coyote_timer > 0):
-		velocity.y = JUMP_VELOCITY
-		coyote_timer = 0
+	# Handle Jump (Coyote Time & Double Jump)
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor() or coyote_timer > 0:
+			velocity.y = JUMP_VELOCITY
+			coyote_timer = 0
+		elif can_double_jump:
+			velocity.y = JUMP_VELOCITY
+			can_double_jump = false  # Disable double jump after use
 
 	# Handle Movement
 	var direction := Input.get_axis("move_left", "move_right")
